@@ -19,12 +19,12 @@
   <table>
     <tr>
       <th>Name</th>
-      <th>ID</th>
+      <th>Action</th>
     </tr>
     <% routines.forEach(routine => {%>
       <tr >
         <td><a href="/routines/<%= routine._id %>" ><%= routine.name %></a></td>
-        <td></td>
+        <td><button onclick="deleteRoutine('<%= routine._id %>')">Delete</button> </td>
         </tr>
     <% }) %>
     </table>
@@ -32,3 +32,18 @@
 </html>
 </body>
 </html>
+
+
+<script>
+  const deleteRoutine = (routineId) => {
+    fetch('/routines', {
+      method: 'delete',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        routineId: routineId
+      })
+    }).then(data => {
+      window.location.reload()
+    })
+  }
+</script>

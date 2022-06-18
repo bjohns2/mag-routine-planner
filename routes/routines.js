@@ -72,14 +72,14 @@ module.exports = function (app, db) {
     .catch(error => console.error(error))
   })
 
-  // app.delete('/routines', (req, res) => {
-  //   routinesCollection.deleteOne(
-  //     { _id: new ObjectId(req.body.routineId) },
-  //   )
-  //   .then( result => {
-  //     console.log(result)
-  //     res.json(`Deleted routine ${req.body.routineId}`)
-  //  })
-  //   .catch(error => console.error(error))
-  // })
+  app.delete('/routines', (req, res) => {
+    routinesCollection.deleteOne(
+      { _id: new ObjectId(req.body.routineId) },
+    )
+    .then( result => {
+      console.log(result)
+      res.json(`Deleted routine ${req.body.routineId}`)
+   })
+    .catch(error => console.error(error))
+  })
 }
