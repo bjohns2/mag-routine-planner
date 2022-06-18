@@ -36,8 +36,6 @@ module.exports = function (app, db) {
       { _id: new ObjectId(req.params.id) },
     )
     .then(routine => {
-      console.log('found routine', routine)
-
       skillsCollection.find().toArray()
       .then(skills => {
         res.render('routines/show.ejs', { routine: routine, skills: skills })
@@ -48,10 +46,6 @@ module.exports = function (app, db) {
 
   // update routine
   app.post('/routines/:id', (req, res) => {
-    console.log('updating routine')
-    console.log("params.id", req.params.id)
-    console.log("body._id", req.body._id)
-    console.log("body", req.body)
     routinesCollection.findOneAndUpdate(
       { _id: new ObjectId(req.params.id) },
       {
@@ -63,7 +57,6 @@ module.exports = function (app, db) {
       }
     )
     .then(routine => {
-      console.log('updated routine', routine)
       skillsCollection.find().toArray()
       .then(skills => {
         res.render('routines/show.ejs', { routine: routine.value, skills: skills })

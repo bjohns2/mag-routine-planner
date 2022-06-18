@@ -5,6 +5,7 @@ const MongoClient = require('mongodb').MongoClient
 var favicon = require('serve-favicon')
 require('dotenv').config();
 const port = process.env.PORT || 80
+//npm run dev
 
 connectionString = `mongodb+srv://bjohns:${process.env.DB_PASSWORD}@cluster0.zmony.mongodb.net/?retryWrites=true&w=majority`
 MongoClient.connect(connectionString)
@@ -16,6 +17,7 @@ MongoClient.connect(connectionString)
     app.use(express.json());
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(favicon('./images/favicon.ico'))
+    app.use(express.static('public'));
 
 
     require('./routes/index.js')(app, db)

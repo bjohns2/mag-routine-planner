@@ -3,30 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>MAG Routine Planner</title>
+  <link rel="stylesheet" type="text/css" href="/css/skeleton.css" />
 </head>
 <body>
   <h1> <%= routine.name %> </h1>
   <form action="/routines/<%= routine._id %>" method="POST">
-    <label for="name">Name</label><br>
+    <label for="name">Name</label>
     <input type="text" name="name" value="<%= routine.name %>"><br>
-
+    <table>
     <% for (var i = 1; i < 9; i++) {%>
-      <label for="skill-<%= i %>" id="skill-<%= i %>">Skill <%= i %></label>
-      <select name="skill-<%= i %>">
-        <option value="none" >None</option>
-        <% skills.forEach(skill => {%> 
-          <% if (routine[`skill-${i}`] === skill._id.toString()) { %>
-              <option  value="<%= skill._id.toString() %>" selected> <%= skill.name %></option>
-            <%  } else { %>
-              <option  value="<%= skill._id.toString() %>"> <%= skill.name %></option>
-            <% } %>
-        <% }) %>
-      </select>
-      <br>
+      <tr>
+        <td>
+          <label for="skill-<%= i %>" id="skill-<%= i %>">Skill <%= i %></label>
+        </td>
+        <td>
+          <select name="skill-<%= i %>">
+            <option value="none" >None</option>
+            <% skills.forEach(skill => {%> 
+              <% if (routine[`skill-${i}`] === skill._id.toString()) { %>
+                  <option  value="<%= skill._id.toString() %>" selected> <%= skill.name %></option>
+                <%  } else { %>
+                  <option  value="<%= skill._id.toString() %>"> <%= skill.name %></option>
+                <% } %>
+            <% }) %>
+          </select>
+        </td>
+      </tr>
     <%}%>
+    </table>
 
-
-    <button type="submit">Submit</button>
+    <button type="submit">Save</button>
   </form>
 
   <h2>Worksheet</h2>
