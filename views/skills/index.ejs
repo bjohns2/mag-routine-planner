@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MAG Routine Planner</title>
+</head>
+<body>
+  <h1> Skills </h1>
+
+  <h2>Create new kill</h2>
+  <form action="/skills" method="POST">
+    <label for="name">Name</label><br>
+    <input type="text" name="name"><br>
+    <label for="name">Difficulty</label><br>
+    <input type="text" name="difficulty"><br>
+    <label for="name">Value</label><br>
+    <input type="text" name="value"><br>
+    <label for="name">Element group</label><br>
+    <input type="text" name="elementGroup"><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <h2> Skills </h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Difficulty</th>
+      <th>Value</th>
+      <th>Element group</th>
+      <th>Actions</th>
+    </tr>
+    <% skills.forEach(skill => {%>
+      <tr >
+        <td><%= skill.name %></td>
+        <td><%= skill.difficulty %></td>
+        <td><%= skill.value %></td>
+        <td><%= skill.elementGroup %></td>
+        <td><button onclick="deleteSkill('<%= skill._id %>')">Delete</button> </td>
+        </tr>
+    <% }) %>
+  </ul>
+</body>
+</html>
+
+<script>
+  const deleteSkill = (skillId) => {
+    fetch('/skills', {
+      method: 'delete',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        skillId: skillId
+      })
+    }).then(data => {
+      window.location.reload()
+    })
+  }
+</script>
