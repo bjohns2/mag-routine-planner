@@ -3,7 +3,6 @@ const ObjectId = require('mongodb').ObjectId;
 module.exports = function (app, db) {
   const skillsCollection = db.collection('skills')
 
-
   app.get('/skills', (req, res) => {
     skillsCollection.find().toArray()
     .then(results => {

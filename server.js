@@ -19,6 +19,7 @@ MongoClient.connect(connectionString)
 
     require('./routes/index.js')(app, db)
     require('./routes/skills.js')(app, db)
+    require('./routes/routines.js')(app, db)
     
     app.listen(3000, function() {
         console.log('listening on 3000')
