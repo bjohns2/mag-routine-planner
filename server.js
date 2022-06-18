@@ -4,6 +4,7 @@ const app = express();
 const MongoClient = require('mongodb').MongoClient
 var favicon = require('serve-favicon')
 require('dotenv').config();
+const port = process.env.PORT || 80
 
 connectionString = `mongodb+srv://bjohns:${process.env.DB_PASSWORD}@cluster0.zmony.mongodb.net/?retryWrites=true&w=majority`
 MongoClient.connect(connectionString)
@@ -21,8 +22,8 @@ MongoClient.connect(connectionString)
     require('./routes/skills.js')(app, db)
     require('./routes/routines.js')(app, db)
     
-    app.listen(3000, function() {
-        console.log('listening on 3000')
+    app.listen(port, function() {
+        console.log(`listening on port ${port}`)
     })
   })
   .catch(console.error)
