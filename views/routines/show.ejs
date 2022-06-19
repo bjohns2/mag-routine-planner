@@ -1,97 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>MAG Routine Planner</title>
-  <link rel="stylesheet" type="text/css" href="/css/skeleton.css" />
-</head>
-<body class="container">
-  <h1> <%= routine.name %> </h1>
-  <form action="/routines/<%= routine._id %>" method="POST">
-    <label for="name">Name</label>
-    <input type="text" name="name" value="<%= routine.name %>"><br>
-    <label for="event">Event</label>
-    <select name="event" id="event">
-    <% ['FX', 'PH', 'SR', 'VT', 'PB', 'HB'].forEach((eventType) => { %>
-        <% if (eventType === routine.event) { %>
-          <option value="<%= eventType %>" selected><%= eventType %></option>
-        <% } else { %>
-          <option value="<%= eventType %>"><%= eventType %></option>
-        <% }  %>
-    <% })  %>
-    </select> 
-    <table>
-    <% for (var i = 1; i < 9; i++) {%>
-      <tr>
-        <td>
-          <label for="skill-<%= i %>" id="skill-<%= i %>">Skill <%= i %></label>
-        </td>
-        <td>
-          <select name="skill-<%= i %>">
-            <option value="none" >None</option>
+  <head>
+    <meta charset="UTF-8">
+    <title>MAG Routine Planner</title>
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.css" />
+  </head>
+  <body class="container">
+    <div class="row">
+      <h1> <%= routine.name %> </h1>
+      <form action="/routines/<%= routine._id %>" method="POST">
+        <label for="name">Name</label>
+        <input type="text" name="name" value="<%= routine.name %>"><br>
+        <label for="event">Event</label>
+        <select name="event" id="event">
+        <% ['FX', 'PH', 'SR', 'VT', 'PB', 'HB'].forEach((eventType) => { %>
+            <% if (eventType === routine.event) { %>
+              <option value="<%= eventType %>" selected><%= eventType %></option>
+            <% } else { %>
+              <option value="<%= eventType %>"><%= eventType %></option>
+            <% }  %>
+        <% })  %>
+        </select> 
+        <table>
+        <% for (var i = 1; i < 9; i++) {%>
+          <tr>
+            <td>
+              <label for="skill-<%= i %>" id="skill-<%= i %>">Skill <%= i %></label>
+            </td>
+            <td>
+              <select name="skill-<%= i %>">
+                <option value="none" >None</option>
+                <% skills.forEach(skill => {%> 
+                  <% if (routine[`skill-${i}`] === skill._id.toString()) { %>
+                      <option  value="<%= skill._id.toString() %>" selected> <%= skill.name %></option>
+                    <%  } else { %>
+                      <option  value="<%= skill._id.toString() %>"> <%= skill.name %></option>
+                    <% } %>
+                <% }) %>
+              </select>
+            </td>
+          </tr>
+        <%}%>
+        </table>
+
+        <button type="submit">Save</button>
+      </form>
+
+      <h2>Worksheet</h2>
+      <table>
+        <tr>
+          <th>Name of Skill</th>
+          <th>Difficulty (A-H)</th>
+          <th>Value (0.1 - 0.8)</th>
+          <th>Element group (1-4)</th>
+        </tr>
+        <% var totalSkillValue = 0.0 %>
+        <% var elementGroups = new Set() %>
+        <% var totalSkills = 0 %>
+        <% var dismountSkill = null %>
+        <% for (var i = 1; i < 9; i++) {%>
+          <tr>
+            <!-- this is horrifically inefficient -->
             <% skills.forEach(skill => {%> 
               <% if (routine[`skill-${i}`] === skill._id.toString()) { %>
-                  <option  value="<%= skill._id.toString() %>" selected> <%= skill.name %></option>
-                <%  } else { %>
-                  <option  value="<%= skill._id.toString() %>"> <%= skill.name %></option>
-                <% } %>
+                <% totalSkillValue = Number.parseFloat((Number.parseFloat(totalSkillValue) + Number.parseFloat(skill.value))).toFixed(2) %>
+                <% skill.elementGroup && elementGroups.add(skill.elementGroup) %>
+                <% routine[`skill-${i}`] !== 'none' ? totalSkills += 1 : 0 %>
+                <% routine[`skill-${i}`] !== 'none' ? dismountSkill = skill : 0 %>
+
+                <td><%= skill.name %></td>
+                <td><%= skill.difficulty %></td>
+                <td><%= skill.value %></td>
+                <td><%= skill.elementGroup %></td>
+                <%  } %>
             <% }) %>
-          </select>
-        </td>
-      </tr>
-    <%}%>
-    </table>
-
-    <button type="submit">Save</button>
-  </form>
-
-  <h2>Worksheet</h2>
-  <table>
-    <tr>
-      <th>Name of Skill</th>
-      <th>Difficulty (A-H)</th>
-      <th>Value (0.1 - 0.8)</th>
-      <th>Element group (1-4)</th>
-    </tr>
-    <% var totalSkillValue = 0.0 %>
-    <% var elementGroups = new Set() %>
-    <% var totalSkills = 0 %>
-    <% var dismountSkill = null %>
-    <% for (var i = 1; i < 9; i++) {%>
-      <tr>
-        <!-- this is horrifically inefficient -->
-        <% skills.forEach(skill => {%> 
-          <% if (routine[`skill-${i}`] === skill._id.toString()) { %>
-            <% totalSkillValue = Number.parseFloat((Number.parseFloat(totalSkillValue) + Number.parseFloat(skill.value))).toFixed(2) %>
-            <% skill.elementGroup && elementGroups.add(skill.elementGroup) %>
-            <% routine[`skill-${i}`] !== 'none' ? totalSkills += 1 : 0 %>
-            <% routine[`skill-${i}`] !== 'none' ? dismountSkill = skill : 0 %>
-
-            <td><%= skill.name %></td>
-            <td><%= skill.difficulty %></td>
-            <td><%= skill.value %></td>
-            <td><%= skill.elementGroup %></td>
-            <%  } %>
-        <% }) %>
-      </tr>
-    <%}%>
-  </table>
-  <p>Total skill value: <%= totalSkillValue %></p>
-  <p>Unique element groups included:  <%= [...elementGroups].join(', ') %> (<%= elementGroups.size %> total)</p>
-  <% if (dismountSkill) {%>
-    <p>Dismount skill, <%= dismountSkill.name %>, is difficulty <%= dismountSkill.difficulty %></p>
-  <% } %>
-  <p>Total skill count: <%= totalSkills %> </p>
-  <% if (dismountSkill?.difficulty === 'A') { %>
-    <p>Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroups.size %> - 0.2 ) + <%= skillCountFactor(totalSkills) %></p>
-    <p>Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroups.size))  - 0.2 + skillCountFactor(totalSkills) %></p>
-    <% } else { %>
-      <p>Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroups.size %> ) + <%= skillCountFactor(totalSkills) %></p>
-      <p>Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroups.size)) + skillCountFactor(totalSkills) %></p>
-    <% } %>
-</body>
-</html>
-</body>
+          </tr>
+        <%}%>
+      </table>
+      <p>Total skill value: <%= totalSkillValue %></p>
+      <p>Unique element groups included:  <%= [...elementGroups].join(', ') %> (<%= elementGroups.size %> total)</p>
+      <% if (dismountSkill) {%>
+        <p>Dismount skill, <%= dismountSkill.name %>, is difficulty <%= dismountSkill.difficulty %></p>
+      <% } %>
+      <p>Total skill count: <%= totalSkills %> </p>
+      <% if (dismountSkill?.difficulty === 'A') { %>
+        <p>Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroups.size %> - 0.2 ) + <%= skillCountFactor(totalSkills) %></p>
+        <p>Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroups.size))  - 0.2 + skillCountFactor(totalSkills) %></p>
+      <% } else { %>
+        <p>Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroups.size %> ) + <%= skillCountFactor(totalSkills) %></p>
+        <p>Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroups.size)) + skillCountFactor(totalSkills) %></p>
+      <% } %>
+    </div>
+  </body>
 </html>
 
 <%
