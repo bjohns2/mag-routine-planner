@@ -10,8 +10,16 @@
   <form action="/routines/<%= routine._id %>" method="POST">
     <label for="name">Name</label>
     <input type="text" name="name" value="<%= routine.name %>"><br>
-    <label for="name">Event (FX, PH, SR, VT, or HB)</label>
-    <input type="text" value="<%= routine.event %>" name="event">
+    <label for="event">Event</label>
+    <select name="event" id="event">
+    <% ['FX', 'PH', 'SR', 'VT', 'PB', 'HB'].forEach((eventType) => { %>
+        <% if (eventType === routine.event) { %>
+          <option id="event-<%= eventType %>" value="<%= eventType %>" selected><%= eventType %></option>
+        <% } else { %>
+          <option id="event-<%= eventType %>" value="<%= eventType %>"><%= eventType %></option>
+        <% }  %>
+    <% })  %>
+    </select> 
     <table>
     <% for (var i = 1; i < 9; i++) {%>
       <tr>
