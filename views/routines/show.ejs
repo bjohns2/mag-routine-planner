@@ -10,6 +10,8 @@
   <form action="/routines/<%= routine._id %>" method="POST">
     <label for="name">Name</label>
     <input type="text" name="name" value="<%= routine.name %>"><br>
+    <label for="name">Event (FX, PH, SR, VT, or HB)</label>
+    <input type="text" value="<%= routine.event %>" name="event">
     <table>
     <% for (var i = 1; i < 9; i++) {%>
       <tr>
@@ -68,9 +70,11 @@
   </table>
   <p>Total skill value: <%= totalSkillValue %></p>
   <p>Unique element groups included:  <%= [...elementGroups].join(', ') %> (<%= elementGroups.size %> total)</p>
-  <p>Dismount skill, <%= dismountSkill.name %>, is difficulty <%= dismountSkill.difficulty %></p>
+  <% if (dismountSkill) {%>
+    <p>Dismount skill, <%= dismountSkill.name %>, is difficulty <%= dismountSkill.difficulty %></p>
+  <% } %>
   <p>Total skill count: <%= totalSkills %> </p>
-  <% if (dismountSkill.difficulty === 'A') { %>
+  <% if (dismountSkill?.difficulty === 'A') { %>
     <p>Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroups.size %> - 0.2 ) + <%= skillCountFactor(totalSkills) %></p>
     <p>Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroups.size))  - 0.2 + skillCountFactor(totalSkills) %></p>
     <% } else { %>

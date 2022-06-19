@@ -12,6 +12,8 @@
   <form action="/skills" method="POST">
     <label for="name">Name</label>
     <input type="text" name="name">
+    <label for="name">Event (FX, PH, SR, VT, or HB)</label>
+    <input type="text" name="event">
     <label for="name">Difficulty</label>
     <input type="text" name="difficulty">
     <label for="name">Value</label>
@@ -27,6 +29,7 @@
   <table>
     <tr>
       <th>Name</th>
+      <th>Event</th>
       <th>Difficulty</th>
       <th>Value</th>
       <th>Element group</th>
@@ -35,6 +38,7 @@
     <% skills.forEach(skill => {%>
       <tr >
         <td><%= skill.name %></td>
+        <td><%= skill.event %></td>
         <td><%= skill.difficulty %></td>
         <td><%= skill.value %></td>
         <td><%= skill.elementGroup %></td>

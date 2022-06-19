@@ -12,6 +12,8 @@
   <form action="/routines" method="POST">
     <label for="name">Name</label><br>
     <input type="text" name="name"><br>
+    <label for="name">Event (FX, PH, SR, VT, or HB)</label>
+    <input type="text" name="event">
     <button type="submit">Create</button>
   </form>
 
@@ -20,11 +22,13 @@
   <table>
     <tr>
       <th>Name</th>
+      <th>Event</th>
       <th>Action</th>
     </tr>
     <% routines.forEach(routine => {%>
       <tr >
         <td><a href="/routines/<%= routine._id %>" ><%= routine.name %></a></td>
+        <td><%= routine.event %></a></td>
         <td><button onclick="deleteRoutine('<%= routine._id %>')">Delete</button> </td>
         </tr>
     <% }) %>

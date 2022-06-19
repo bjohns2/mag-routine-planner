@@ -36,7 +36,7 @@ module.exports = function (app, db) {
       { _id: new ObjectId(req.params.id) },
     )
     .then(routine => {
-      skillsCollection.find().toArray()
+      skillsCollection.find({ event: routine.event }).toArray()
       .then(skills => {
         res.render('routines/show.ejs', { routine: routine, skills: skills })
       })
@@ -57,7 +57,7 @@ module.exports = function (app, db) {
       }
     )
     .then(routine => {
-      skillsCollection.find().toArray()
+      skillsCollection.find({ event: routine.value.event }).toArray()
       .then(skills => {
         res.render('routines/show.ejs', { routine: routine.value, skills: skills })
       })
