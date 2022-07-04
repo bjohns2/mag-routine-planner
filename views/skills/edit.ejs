@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MAG Routine Planner</title>
+  <link rel="stylesheet" type="text/css" href="/css/skeleton.css" />
+</head>
+<body class="container">
+<div class="row">
+  <h1> Skill: <%= skill.name %> </h1>
+
+  <h2>Edit</h2>
+  <form action="/skills/<%= skill._id %>" method="POST">
+    <label for="name">Name</label>
+    <input type="text" name="name" value="<%= skill.name %>">
+    <label for="event">Event</label>
+    <select name="event" id="event">
+      <% ['FX', 'PH', 'SR', 'VT', 'PB', 'HB'].forEach((eventType) => { %>
+        <% if (eventType === skill.event) { %>
+          <option value="<%= eventType %>" selected><%= eventType %></option>
+        <% } else { %>
+          <option value="<%= eventType %>"><%= eventType %></option>
+        <% }  %>
+    <% })  %>
+    </select> 
+    <label for="name">Difficulty</label>
+    <input type="text" name="difficulty" value="<%= skill.difficulty %>">
+    <label for="name">Element group</label>
+    <input type="text" name="elementGroup" value="<%= skill.elementGroup %>">
+    <br>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <button onclick="deleteSkill('<%= skill._id %>')">Delete</button>
+
+</div>
+
+
+<script>
+  const deleteSkill = (skillId) => {
+    fetch('/skills', {
+      method: 'delete',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        skillId: skillId
+      })
+    }).then(data => {
+      console.log('Successful delete')
+      window.location.replace('/skills')
+    })
+  }
+</script>
