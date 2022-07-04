@@ -20,15 +20,15 @@
       <option value="PH">PH</option>
       <option value="SR">SR</option>
       <option value="VT">VT</option>
-      <option value="HB">HB</option>
       <option value="PB">PB</option>
+      <option value="HB">HB</option>
     </select> 
     <label for="name">Difficulty</label>
-    <input type="text" name="difficulty">
+    <input type="text" name="difficulty"  value="<%= skills[skills.length -1].difficulty %>">
     <label for="name">Value</label>
-    <input type="text" name="value">
+    <input type="text" name="value"  value="<%= skills[skills.length -1].value %>">
     <label for="name">Element group</label>
-    <input type="text" name="elementGroup">
+    <input type="text" name="elementGroup"  value="<%= skills[skills.length -1].elementGroup %>">
     <br>
     <br>
     <button type="submit">Submit</button>
