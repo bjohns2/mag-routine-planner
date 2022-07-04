@@ -16,12 +16,13 @@
     <label for="event">Event</label>
     <select name="event" id="event">
       <option value="">Select an event</option>
-      <option value="FX">FX</option>
-      <option value="PH">PH</option>
-      <option value="SR">SR</option>
-      <option value="VT">VT</option>
-      <option value="PB">PB</option>
-      <option value="HB">HB</option>
+      <% ['FX', 'PH', 'SR', 'VT', 'PB', 'HB'].forEach((eventType) => { %>
+        <% if (eventType === skills[skills.length -1].event) { %>
+          <option value="<%= eventType %>" selected><%= eventType %></option>
+        <% } else { %>
+          <option value="<%= eventType %>"><%= eventType %></option>
+        <% }  %>
+    <% })  %>
     </select> 
     <label for="name">Difficulty</label>
     <input type="text" name="difficulty"  value="<%= skills[skills.length -1].difficulty %>">
