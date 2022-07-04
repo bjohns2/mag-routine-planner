@@ -50,24 +50,10 @@
         <td><%= skill.difficulty %></td>
         <td><%= skill.value %></td>
         <td><%= skill.elementGroup %></td>
-        <td><button onclick="deleteSkill('<%= skill._id %>')">Delete</button> </td>
-        </tr>
+        <td><a href="/skills/<%= skill._id %>" >Edit</a> </td>
+      </tr>
     <% }) %>
   </table>
 </div>
 </body>
 </html>
-
-<script>
-  const deleteSkill = (skillId) => {
-    fetch('/skills', {
-      method: 'delete',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        skillId: skillId
-      })
-    }).then(data => {
-      window.location.reload()
-    })
-  }
-</script>
