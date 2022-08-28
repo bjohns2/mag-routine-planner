@@ -55,18 +55,19 @@
           <th>Element group (1-4)</th>
         </tr>
         <% var totalSkillValue = 0.0 %>
-        <% var elementGroups = new Set() %>
+        <% var elementGroups = new Array() %>
         <% var totalSkills = 0 %>
-        <% var dismountSkill = null %>
+        <% var finalSkill = null %>
         <% for (var i = 1; i < 9; i++) {%>
           <tr>
             <!-- this is horrifically inefficient -->
             <% skills.forEach(skill => {%> 
               <% if (routine[`skill-${i}`] === skill._id.toString()) { %>
                 <% totalSkillValue = Number.parseFloat((Number.parseFloat(totalSkillValue) + Number.parseFloat(skill.value))).toFixed(2) %>
-                <% skill.elementGroup && elementGroups.add(skill.elementGroup) %>
+                <% skill.elementGroup && elementGroups.push(skill.elementGroup) %>
                 <% routine[`skill-${i}`] !== 'none' ? totalSkills += 1 : 0 %>
-                <% routine[`skill-${i}`] !== 'none' ? dismountSkill = skill : 0 %>
+                <% routine[`skill-${i}`] !== 'none' ? finalSkill = skill : 0 %>
+
 
                 <td><%= skill.name %></td>
                 <td><%= skill.difficulty %></td>
@@ -77,40 +78,49 @@
           </tr>
         <%}%>
       </table>
+      <!-- in any event except floor (or vault), the routeine has a dismount if the last skill is elemtn group 4.
+        for floor, the routeine has a dismount if the last skill is elemtn group 2, or 3 (floor does not have an element group 4)
+        ignore the elenment group bonus for dismount skills (the dismount skill element group doesn't count as a uique element group)
+        BUT add a dismount bonus of 0.3 if the dismount is an A, 0.5 if it's not an A
+      -->
+      <% var dismountSkill = (finalSkill.elementGroup === '4' || (routine.event === 'FX' && finalSkill.elementGroup === '2') || (routine.event === 'FX' && finalSkill.elementGroup === '3')) ? finalSkill : null %>
+      <% var dismountBonus = 0 %>
+      <% if (dismountSkill?.difficulty === 'A') { dismountBonus = 0.3 }%>
+      <% if (dismountSkill?.difficulty === 'B') { dismountBonus = 0.5 }%>
+      <% if (dismountSkill) { elementGroups.pop(1) } %> <!-- ignore the element group bonus for the dismount-->
+      <% var elementGroupsSet = new Set(elementGroups) %>
       <p>Total skill value: <%= totalSkillValue %></p>
-      <p>Unique element groups included:  <%= [...elementGroups].join(', ') %> (<%= elementGroups.size %> total)</p>
+      <p>Unique element groups (excluding dismount):  <%= [...elementGroupsSet].join(', ') %> (<%= elementGroupsSet.size %> total)</p>
       <% if (dismountSkill) {%>
-        <p>Dismount skill, <%= dismountSkill.name %>, is difficulty <%= dismountSkill.difficulty %></p>
+        <p>Dismount skill, <b><%= dismountSkill.name %></b>, is difficulty <b><%= dismountSkill.difficulty %></b>, resulting in dismount bonus <b><%= dismountBonus %></b></p>
       <% } %>
       <p>Total skill count: <%= totalSkills %> </p>
-      <% if (dismountSkill?.difficulty === 'A') { %>
-        <p>Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroups.size %> - 0.2 ) + <%= skillCountFactor(totalSkills) %></p>
-        <p>Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroups.size))  - 0.2 + skillCountFactor(totalSkills) %></p>
-      <% } else { %>
-        <p>Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroups.size %> ) + <%= skillCountFactor(totalSkills) %></p>
-        <p>Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroups.size)) + skillCountFactor(totalSkills) %></p>
-      <% } %>
+      <p>
+        Start value = total skill value + ( 0.5 * number of unique element groups, excluding dismount ) + dismount bonus + (10 - skill count penalty)
+        <br/>
+        Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroupsSet.size %> ) + <%= dismountBonus %> + (10 - <%= skillCountPenalty(totalSkills) %>)
+        <br/>
+        Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroupsSet.size)) + dismountBonus + 10 - skillCountPenalty(totalSkills) %>
+      </p>
     </div>
   </body>
 </html>
 
 <%
-function skillCountFactor(skillCount) {
+function skillCountPenalty(skillCount) {
     switch(skillCount) {
     case 1:
-      return 4;
-    case 2:
       return 5;
+    case 2:
+      return 4;
     case 3:
-      return 6;
+      return 3;
     case 4:
-      return 7;
+      return 2;
     case 5:
-      return 8;
-    case 6:
-      return 9;
+      return 1;
     default:
-      return 10;
+      return 0;
   }  
 }
 %>
