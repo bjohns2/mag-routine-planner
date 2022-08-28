@@ -56,15 +56,17 @@
 
 <script>
   const deleteRoutine = (routineId) => {
-    fetch('/routines', {
-      method: 'delete',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        routineId: routineId
+    if (confirm("Are you sure you want to delete this routine?")) {
+      fetch('/routines', {
+        method: 'delete',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          routineId: routineId
+        })
+      }).then(data => {
+        window.location.reload()
       })
-    }).then(data => {
-      window.location.reload()
-    })
+    } 
   }
   const copyRoutine = (routineId) => {
     fetch(`/routines/${routineId}/copy`, {
