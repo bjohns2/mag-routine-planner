@@ -83,7 +83,7 @@
         ignore the elenment group bonus for dismount skills (the dismount skill element group doesn't count as a uique element group)
         BUT add a dismount bonus of 0.3 if the dismount is an A, 0.5 if it's not an A
       -->
-      <% var dismountSkill = (finalSkill.elementGroup === '4' || (routine.event === 'FX' && finalSkill.elementGroup === '2') || (routine.event === 'FX' && finalSkill.elementGroup === '3')) ? finalSkill : null %>
+      <% var dismountSkill = (finalSkill?.elementGroup === '4' || (routine.event === 'FX' && finalSkill?.elementGroup === '2') || (routine.event === 'FX' && finalSkill?.elementGroup === '3')) ? finalSkill : null %>
       <% var dismountBonus = 0 %>
       <% if (dismountSkill?.difficulty === 'A') { dismountBonus = 0.3 }%>
       <% if (dismountSkill?.difficulty === 'B') { dismountBonus = 0.5 }%>
