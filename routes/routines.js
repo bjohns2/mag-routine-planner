@@ -65,6 +65,24 @@ module.exports = function (app, db) {
     .catch(error => console.error(error))
   })
 
+  // copy routine
+  app.post('/routines/:id/copy', (req, res) => {
+    routinesCollection.findOne(
+      { _id: new ObjectId(req.params.id) },
+    )
+    .then(routineToCopy => {
+      console.log("routineToCopy", routineToCopy);
+      delete routineToCopy._id
+      routineToCopy.name += ' (copy)'
+      console.log("routineToCopy", routineToCopy);
+      routinesCollection.insertOne(routineToCopy)
+      .then(newRoutine => {
+        res.render('routines/show.ejs', { routine: newRoutine.value, skills: [] })
+      })
+    })
+    .catch(error => console.error(error))
+  })
+
   app.delete('/routines', (req, res) => {
     routinesCollection.deleteOne(
       { _id: new ObjectId(req.body.routineId) },

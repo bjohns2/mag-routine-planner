@@ -40,7 +40,10 @@
       <tr >
         <td><a href="/routines/<%= routine._id %>" ><%= routine.name %></a></td>
         <td><%= routine.event %></a></td>
-        <td><button onclick="deleteRoutine('<%= routine._id %>')">Delete</button> </td>
+        <td>
+          <button onclick="deleteRoutine('<%= routine._id %>')">Delete</button> 
+          <button onclick="copyRoutine('<%= routine._id %>')">Make a Copy</button>
+        </td>
         </tr>
     <% }) %>
     </table>
@@ -59,6 +62,15 @@
       body: JSON.stringify({
         routineId: routineId
       })
+    }).then(data => {
+      window.location.reload()
+    })
+  }
+  const copyRoutine = (routineId) => {
+    fetch(`/routines/${routineId}/copy`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({})
     }).then(data => {
       window.location.reload()
     })

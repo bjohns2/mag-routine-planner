@@ -38,6 +38,7 @@ module.exports = function (app, db) {
     .catch(error => console.error(error))
   })
 
+  // create skill
   app.post('/skills', (req, res) => {
     skill = req.body
     skill['value'] = valueFromDifficulty(skill['difficulty']);
@@ -49,6 +50,7 @@ module.exports = function (app, db) {
     res.redirect('skills')
   })
 
+  // delete skill
   app.delete('/skills', (req, res) => {
     skillsCollection.deleteOne(
       { _id: new ObjectId(req.body.skillId) },
@@ -60,34 +62,34 @@ module.exports = function (app, db) {
     .catch(error => console.error(error))
   })
 
-    // show skill
-    app.get('/skills/:id', (req, res) => {
-      skillsCollection.findOne(
-        { _id: new ObjectId(req.params.id) },
-      )
-      .then(skill => {
-        res.render('skills/edit.ejs', { skill: skill })
-      })
-      .catch(error => console.error(error))
+  // show skill
+  app.get('/skills/:id', (req, res) => {
+    skillsCollection.findOne(
+      { _id: new ObjectId(req.params.id) },
+    )
+    .then(skill => {
+      res.render('skills/edit.ejs', { skill: skill })
     })
+    .catch(error => console.error(error))
+  })
   
-    // update skill
-    app.post('/skills/:id', (req, res) => {
-      skill = req.body
-      skill['value'] = valueFromDifficulty(skill['difficulty']);
-      skillsCollection.findOneAndUpdate(
-        { _id: new ObjectId(req.params.id) },
-        {
-          $set: skill
-        },
-        {
-          returnNewDocument: true,
-          returnDocument: 'after',
-        }
-      )
-      .then(updatedSkill => {
-        res.render('skills/edit.ejs', { skill: updatedSkill.value })
-      })
-      .catch(error => console.error(error))
+  // update skill
+  app.post('/skills/:id', (req, res) => {
+    skill = req.body
+    skill['value'] = valueFromDifficulty(skill['difficulty']);
+    skillsCollection.findOneAndUpdate(
+      { _id: new ObjectId(req.params.id) },
+      {
+        $set: skill
+      },
+      {
+        returnNewDocument: true,
+        returnDocument: 'after',
+      }
+    )
+    .then(updatedSkill => {
+      res.render('skills/edit.ejs', { skill: updatedSkill.value })
     })
+    .catch(error => console.error(error))
+  })
 }
