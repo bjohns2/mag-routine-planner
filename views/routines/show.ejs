@@ -58,6 +58,7 @@
         <% var elementGroups = new Array() %>
         <% var totalSkills = 0 %>
         <% var finalSkill = null %>
+        <% var hasRequiredRingsSkill = false %>
         <% for (var i = 1; i < 9; i++) {%>
           <tr>
             <!-- this is horrifically inefficient -->
@@ -67,7 +68,8 @@
                 <% skill.elementGroup && elementGroups.push(skill.elementGroup) %>
                 <% routine[`skill-${i}`] !== 'none' ? totalSkills += 1 : 0 %>
                 <% routine[`skill-${i}`] !== 'none' ? finalSkill = skill : 0 %>
-
+                <!-- for still rings (event SR), remove 0.3 if neither of skills 75 and 81 elemtn group 1 are present -->
+                <% if (skill._id.toString() === '630babe8a949942356e62f03' ||  skill._id.toString() === '630babfa13fb4b94f010ed49') { hasRequiredRingsSkill = true } %>
 
                 <td><%= skill.name %></td>
                 <td><%= skill.difficulty %></td>
@@ -94,13 +96,21 @@
       <% if (dismountSkill) {%>
         <p>Dismount skill, <b><%= dismountSkill.name %></b>, is difficulty <b><%= dismountSkill.difficulty %></b>, resulting in dismount bonus <b><%= dismountBonus %></b></p>
       <% } %>
+      <!-- for still rings (event SR), remove 0.3 if neither of skills 75 and 81 elemtn group 1 are present -->
+      <% var ringsDeductionCopy = '' %>
+      <% if (routine.event === 'SR') { ringsDeductionCopy = '- missing handstand deduction'} %>
+      <% var ringsDeductionMinus = '' %>
+      <% if (routine.event === 'SR') { ringsDeductionMinus = '-'} %>
+      <% var ringsDeduction = null %>
+      <% if (routine.event === 'SR' && hasRequiredRingsSkill) { ringsDeduction = 0} %>
+      <% if (routine.event === 'SR' && !hasRequiredRingsSkill) { ringsDeduction = 0.3} %>
       <p>Total skill count: <%= totalSkills %> </p>
       <p>
-        Start value = total skill value + ( 0.5 * number of unique element groups, excluding dismount ) + dismount bonus + (10 - skill count penalty)
+        Start value = total skill value + ( 0.5 * number of unique element groups, excluding dismount ) + dismount bonus + (10 - skill count penalty) <%= ringsDeductionCopy %>
         <br/>
-        Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroupsSet.size %> ) + <%= dismountBonus %> + (10 - <%= skillCountPenalty(totalSkills) %>)
+        Start value = <%= totalSkillValue %> + ( 0.5 * <%= elementGroupsSet.size %> ) + <%= dismountBonus %> + (10 - <%= skillCountPenalty(totalSkills) %>) <%= ringsDeductionMinus %> <%= ringsDeduction %>
         <br/>
-        Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroupsSet.size)) + dismountBonus + 10 - skillCountPenalty(totalSkills) %>
+        Start value = <%=  Number.parseFloat(totalSkillValue ) + (0.5 *  Number.parseFloat(elementGroupsSet.size)) + dismountBonus + 10 - skillCountPenalty(totalSkills) - ringsDeduction%>
       </p>
     </div>
   </body>
@@ -124,3 +134,4 @@ function skillCountPenalty(skillCount) {
   }  
 }
 %>
+
