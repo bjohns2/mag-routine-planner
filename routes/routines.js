@@ -67,7 +67,7 @@ module.exports = function (app, db) {
 
   // copy routine
   app.post('/routines/:id/copy', (req, res) => {
-    routinesCollection.findOne(
+    var routineToCopy = routinesCollection.findOne(
       { _id: new ObjectId(req.params.id) },
     )
     .then(routineToCopy => {
