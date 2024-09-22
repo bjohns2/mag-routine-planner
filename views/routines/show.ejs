@@ -122,7 +122,11 @@
         <br/>
         Start value = <%= totalSkillValue %> + ( <%= elementGroupBonus1 %> +  <%= elementGroupBonus2 %> +  <%= elementGroupBonus3 %> +  <%= elementGroupBonus4 %> ) + ( 10 - <%= skillCountPenalty(totalSkills) %> ) <%= ringsDeductionMinus %> <%= ringsDeduction %>
         <br/>
-        Start value = <%=  Number.parseFloat(totalSkillValue ) + (elementGroupBonus1 + elementGroupBonus2 + elementGroupBonus3 + elementGroupBonus4) + 10 - skillCountPenalty(totalSkills) - ringsDeduction%>
+        <% var startValue = Number.parseFloat(totalSkillValue ) + (elementGroupBonus1 + elementGroupBonus2 + elementGroupBonus3 + elementGroupBonus4) + 10 - skillCountPenalty(totalSkills) - ringsDeduction %>
+        Start value = <%=  Math.min(13.2, startValue) %>
+        <% if (startValue > 13.1) { %>
+          (start value of <%= startValue %> was capped at max start value of 13.2)
+        <% } %>
       </p>
     </div>
   </body>
