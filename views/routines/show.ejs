@@ -68,7 +68,7 @@
               <% if (routine[`skill-${i}`] === skill._id.toString()) { %>
                 <% routineSkills.push(skill) %> 
                 <% totalSkillValue = Number.parseFloat((Number.parseFloat(totalSkillValue) + Number.parseFloat(skill.value))).toFixed(2) %>
-                <% skill.elementGroup && elementGroups.push(skill.elementGroup) %>
+                <% skill.elementGroup && ['1','2','3','4'].includes(skill.elementGroup) && elementGroups.push(skill.elementGroup) %>
                 <% routine[`skill-${i}`] !== 'none' ? totalSkills += 1 : 0 %>
                 <% routine[`skill-${i}`] !== 'none' ? finalSkill = skill : 0 %>
                 <!-- for still rings (event SR), remove 0.3 if neither of skills 75 and 81 element group 1 are present -->
@@ -89,8 +89,9 @@
         for element groups 2,3,4: it's .3 if hardest skill is A, .5 if skill is B or higher 
       -->
       <% var elementGroupsSet = new Set(elementGroups) %>
+      <% elementGroupsSet = Array.from(elementGroupsSet).sort() %>
       <p>Total skill value: <%= totalSkillValue %></p>
-      <p>Unique element groups:  <%= [...elementGroupsSet].join(', ') %> (<%= elementGroupsSet.size %> total)</p>
+      <p>Unique element groups:  <%= [...elementGroupsSet].join(', ') %> (<%= elementGroupsSet.size %>total)</p>
 
       <% var highestSkillGroup2 = routineSkills.filter(skill => skill.elementGroup === '1').sort().shift() %>
       <% var elementGroupBonus1 = highestSkillGroup2 ? 0.5 : 0.0 %>
@@ -119,7 +120,7 @@
       <p>
         Start value = total skill value + ( sum of element group bonus ) + ( 10 - skill count penalty ) <%= ringsDeductionCopy %>
         <br/>
-        Start value = <%= totalSkillValue %> + ( <%= elementGroupBonus1 %> +  <%= elementGroupBonus2 %> +  <%= elementGroupBonus3 %> +  <%= elementGroupBonus4 %> ) + ( 10 - <%= skillCountPenalty(totalSkills) %>) <%= ringsDeductionMinus %> <%= ringsDeduction %>
+        Start value = <%= totalSkillValue %> + ( <%= elementGroupBonus1 %> +  <%= elementGroupBonus2 %> +  <%= elementGroupBonus3 %> +  <%= elementGroupBonus4 %> ) + ( 10 - <%= skillCountPenalty(totalSkills) %> ) <%= ringsDeductionMinus %> <%= ringsDeduction %>
         <br/>
         Start value = <%=  Number.parseFloat(totalSkillValue ) + (elementGroupBonus1 + elementGroupBonus2 + elementGroupBonus3 + elementGroupBonus4) + 10 - skillCountPenalty(totalSkills) - ringsDeduction%>
       </p>
